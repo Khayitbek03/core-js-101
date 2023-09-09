@@ -364,8 +364,30 @@ function getDigitalRoot(num) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  const stack = [];
+  const openingBrackets = ['[', '(', '{', '<'];
+  const closingBrackets = [']', ')', '}', '>'];
+  const bracketPairs = {
+    ']': '[',
+    ')': '(',
+    '}': '{',
+    '>': '<',
+  };
+  const strArray = Array.from(str);
+  let i = 0;
+  while (i < strArray.length) {
+    const char = strArray[i];
+    if (openingBrackets.includes(char)) {
+      stack.push(char);
+    } else if (closingBrackets.includes(char)) {
+      if (!stack.length || stack.pop() !== bracketPairs[char]) {
+        return false;
+      }
+    }
+    i += 1;
+  }
+  return stack.length === 0;
 }
 
 
@@ -389,8 +411,18 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  if (num === 0) {
+    return '0';
+  }
+  let result = '';
+  let currentNum = num;
+  while (currentNum > 0) {
+    const remainder = currentNum % n;
+    result = remainder.toString() + result;
+    currentNum = Math.floor(currentNum / n);
+  }
+  return result;
 }
 
 
@@ -406,8 +438,21 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  if (pathes.length === 0) {
+    return '';
+  }
+  const commonParts = [];
+  const firstPathParts = pathes[0].split('/');
+  for (let i = 0; i < firstPathParts.length; i += 1) {
+    const currentPart = firstPathParts[i];
+    if (pathes.every((path) => path.split('/')[i] === currentPart)) {
+      commonParts.push(currentPart);
+    } else {
+      break;
+    }
+  }
+  return commonParts.length > 0 ? `${commonParts.join('/')}/` : '';
 }
 
 
@@ -429,8 +474,19 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const res = [];
+  for (let i = 0; i < m1.length; i += 1) {
+    res[i] = [];
+    for (let col = 0; col < m2[0].length; col += 1) {
+      let sum = 0;
+      for (let row = 0; row < m1[i].length; row += 1) {
+        sum += m1[i][row] * m2[row][col];
+      }
+      res[i][col] = sum;
+    }
+  }
+  return res;
 }
 
 
@@ -464,8 +520,22 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  const winningCombinations = [
+    [position[0][0], position[0][1], position[0][2]],
+    [position[1][0], position[1][1], position[1][2]],
+    [position[2][0], position[2][1], position[2][2]],
+    [position[0][0], position[1][0], position[2][0]],
+    [position[0][1], position[1][1], position[2][1]],
+    [position[0][2], position[1][2], position[2][2]],
+    [position[0][0], position[1][1], position[2][2]],
+    [position[0][2], position[1][1], position[2][0]],
+  ];
+  const winner = winningCombinations.find((combination) => {
+    const [a, b, c] = combination;
+    return a && a === b && a === c;
+  });
+  return winner ? winner[0] : undefined;
 }
 
 
